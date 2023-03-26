@@ -1,0 +1,60 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $('div.field-image input[type=file]').change(function () {
+                var input = $(this);
+                var imgWrapper = input.parent().next('.preview-image-wrapper');
+                var previewImage = imgWrapper.find('.preview-image');
+                var noImage = imgWrapper.find('.no-image');
+                var file = input.prop('files')[0];
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    var img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function () {
+                        previewImage.attr('src', img.src);
+                        noImage.hide();
+                        previewImage.show();
+                    };
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+    <style>
+        .preview-image-wrapper {
+            margin-top: 10px;
+        }
+
+        .preview-image-wrapper img {
+            max-width: 300px;
+            max-height: 300px;
+        }
+
+        .no-image {
+            font-size: 12px;
+            font-style: italic;
+            color: #aaa;
+            margin-top: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block field_sets %}
+    {{ block.super }}
+    {% if original %}
+        {% for image in original.images.all %}
+            <div class="field-image">
+                <label for="{{ inline_admin_formset.formset.prefix }}-image">{{ image }}</label>
+                <div class="preview-image-wrapper">
+                    <img src="{{ image.image.url }}" class="preview-image">
+                    <div class="no-image">No image</div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
