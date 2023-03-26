@@ -50,6 +50,15 @@ class Product(models.Model):
         return self.name
 
 
+@property
+def average_rating(self):
+    ratings = self.ratings.all()
+    if ratings.count() == 0:
+        return 0
+    total_rating = sum([rating.rating for rating in ratings])
+    return round(total_rating / ratings.count(), 2)
+
+
 class CartItem(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True)
@@ -100,3 +109,24 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.quantity}"
+
+
+class ProductReview(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='reviews')
+    comment = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"
+
+
+class ProductRating(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='ratings')
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(6)])
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name} - {self.rating}"

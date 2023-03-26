@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cart, Category, SubCategory, Product, ProductImage, Customer, Order, OrderItem
+from .models import Cart, Category, SubCategory, Product, ProductImage, Customer, Order, OrderItem, ProductReview, ProductRating
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
@@ -71,4 +71,26 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
+        fields = '__all__'
+
+
+class ProductReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductReview
+        fields = '__all__'
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description', 'price', 'currency',
+                  'image', 'category', 'created', 'images', 'average_rating']
+
+
+class ProductRatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductRating
         fields = '__all__'
