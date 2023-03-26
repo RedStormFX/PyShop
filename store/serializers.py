@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, SubCategory, Product, ProductImage, Customer, Order, OrderItem
+from .models import Cart, Category, SubCategory, Product, ProductImage, Customer, Order, OrderItem
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
@@ -21,6 +21,12 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = '__all__'
 
 
 class CategorySerializer(serializers.ModelSerializer):

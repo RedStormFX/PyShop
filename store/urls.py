@@ -1,8 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views
+from . import views, views_cart
 from .views import SignUpView
-
+from .views import CartView
+from .views import OrderViewSet
 
 router = DefaultRouter()
 router.register(r'categories', views.CategoryViewSet)
@@ -15,6 +16,9 @@ router.register(r'order-items', views.OrderItemViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('signup/', views.SignUpView.as_view(), name='signup'),
-
+    path('add-to-cart/<int:product_id>/',
+         views_cart.add_to_cart, name='add_to_cart'),
+    path('cart/', CartView.as_view(), name='cart'),
+    path('orders/', OrderViewSet.as_view(), name='orders'),
 
 ]
