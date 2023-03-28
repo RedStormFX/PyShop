@@ -25,5 +25,6 @@ urlpatterns = [
     path('favorites/', views.FavoriteCreateView.as_view(), name='favorite-create'),
     path('favorites/<int:pk>/', views.FavoriteDestroyView.as_view(),
          name='favorite-destroy'),
+    path('order-history/', views.OrderHistoryView.as_view(), name='order-history'),
 
 ]

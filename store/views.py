@@ -16,6 +16,7 @@ from .views_cart import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -190,3 +191,12 @@ class FavoriteCreateView(generics.CreateAPIView):
 class FavoriteDestroyView(generics.DestroyAPIView):
     queryset = Favorite.objects.all()
     serializer_class = FavoriteSerializer
+
+
+class OrderHistoryView(generics.ListAPIView):
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Order.objects.filter(customer__user=user)
