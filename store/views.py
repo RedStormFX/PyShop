@@ -15,7 +15,9 @@ from rest_framework import filters
 from .views_cart import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.decorators import api_view
+from .forms import UserProfileForm, CustomerProfileForm, UserPasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -200,3 +202,29 @@ class OrderHistoryView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Order.objects.filter(customer__user=user)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def edit_user_profile(request):
+    user_form = UserProfileSerializer(request.user, data=request.data)
+    customer_form = CustomerProfileSerializer(
+        request.user.customer, data=request.data)
+
+    if user_form.is_valid() and customer_form.is_valid():
+        user_form.save()
+        customer_form.save()
+        return Response({"status": "success"})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_password(request):
+    form = PasswordChangeForm(request.user, request.data)
+
+    if form.is_valid():
+        user = form.save()
+        update_session_auth_hash(request, user)
+        return Response({"status": "success"})
+    else:
+        return Response({"status": "error", "errors": form.errors})
