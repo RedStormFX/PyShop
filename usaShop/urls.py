@@ -4,8 +4,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.views.generic import RedirectView
 from django.conf.urls.static import static
 from django.conf import settings
-from drf_yasg2 import openapi
-from drf_yasg2.views import get_schema_view
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from store.views import CustomTokenObtainPairView
 

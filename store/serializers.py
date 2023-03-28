@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cart, Category, SubCategory, Product, ProductImage, Customer, Order, OrderItem, ProductReview, ProductRating
+from .models import Cart, Category, SubCategory, Product, ProductImage, Customer, Order, OrderItem, ProductReview, ProductRating, Favorite
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 
@@ -93,4 +93,10 @@ class ProductSerializer(serializers.ModelSerializer):
 class ProductRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductRating
+        fields = '__all__'
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
         fields = '__all__'

@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
-from .models import Cart, CartItem, Category, SubCategory, Product, Customer, Order, OrderItem, ProductReview, ProductRating
-from .serializers import CartSerializer, CategorySerializer, SubCategorySerializer, ProductSerializer, CustomerSerializer, OrderSerializer, OrderItemSerializer, ProductReviewSerializer, ProductRatingSerializer
+from .models import Cart, CartItem, Category, SubCategory, Product, Customer, Order, OrderItem, ProductReview, ProductRating, Favorite
+from .serializers import CartSerializer, CategorySerializer, SubCategorySerializer, ProductSerializer, CustomerSerializer, OrderSerializer, OrderItemSerializer, ProductReviewSerializer, ProductRatingSerializer, FavoriteSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
@@ -180,3 +180,13 @@ def purchase_product(request, product_id):
     # Но пока что мы просто вернем сообщение о том, что товар куплен успешно.
     return Response({"detail": f"Successfully purchased {product.name}. The payment system will contact you when the product is shipped."},
                     status=status.HTTP_200_OK)
+
+
+class FavoriteCreateView(generics.CreateAPIView):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+
+
+class FavoriteDestroyView(generics.DestroyAPIView):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer

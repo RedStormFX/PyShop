@@ -22,6 +22,8 @@ urlpatterns = [
     path('orders/', OrderViewSet.as_view(), name='orders'),
     path('purchase/<int:product_id>/',
          views.purchase_product, name='purchase_product'),
-
+    path('favorites/', views.FavoriteCreateView.as_view(), name='favorite-create'),
+    path('favorites/<int:pk>/', views.FavoriteDestroyView.as_view(),
+         name='favorite-destroy'),
 
 ]
