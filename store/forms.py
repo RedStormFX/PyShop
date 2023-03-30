@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
-from .models import Customer, User
+from store.models import Customer, User
 
 
 class UserProfileForm(UserChangeForm):
