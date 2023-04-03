@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from .category import Category, SubCategory
 from django.utils import timezone
+from django.conf import settings
 
 CURRENCY_CHOICES = [
     ('USD', 'US Dollars'),
@@ -26,14 +27,19 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def get_image_url(self):
+        if settings.DEFAULT_FILE_STORAGE == 'storages.backends.s3boto3.S3Boto3Storage':
+            return f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.{settings.AWS_S3_REGION_NAME}.amazonaws.com/{self.image.name}"
+        else:
+            return self.image.url
 
-@property
-def average_rating(self):
-    ratings = self.ratings.all()
-    if ratings.count() == 0:
-        return 0
-    total_rating = sum([rating.rating for rating in ratings])
-    return round(total_rating / ratings.count(), 2)
+    @property
+    def average_rating(self):
+        ratings = self.ratings.all()
+        if ratings.count() == 0:
+            return 0
+        total_rating = sum([rating.rating for rating in ratings])
+        return round(total_rating / ratings.count(), 2)
 
 
 class ProductImage(models.Model):
