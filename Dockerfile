@@ -1,20 +1,30 @@
 # Используйте официальный образ Python
-FROM python:3.9
+FROM python:3.11-slim
 
 # Установите рабочую директорию
 WORKDIR /app
 
-# Копируйте файлы с зависимостями
-COPY requirements.txt .
+# Копируйте файлы с зависимостями и установите их
+COPY requirements.txt /app/
+COPY .env /app/
 
-# Установите зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируйте остальные файлы проекта
-COPY . .
+# Копируйте остальные файлы приложения
+COPY . /app/
+
+# Экспортируйте переменные окружения
+ENV DJANGO_SETTINGS_MODULE=usaShop.settings
+ENV PYTHONUNBUFFERED=1
+
+# Соберите статические файлы
+RUN python manage.py collectstatic --noinput
 
 # Выполните миграции базы данных
 RUN python manage.py migrate
 
-# Укажите команду для запуска сервера
-CMD gunicorn usaShop.wsgi:application --bind 0.0.0.0:8000
+# Откройте порт для приложения
+EXPOSE 8000
+
+# Запустите приложение
+CMD ["gunicorn", "-w", "3", "-b", ":8000", "usaShop.wsgi:application"]
