@@ -24,7 +24,8 @@ RUN python manage.py collectstatic --noinput
 RUN python manage.py migrate
 
 # Откройте порт для приложения
-EXPOSE 8000
+EXPOSE 8080
 
 # Запустите приложение
-CMD ["gunicorn", "-w", "3", "-b", ":8000", "usaShop.wsgi:application"]
+CMD ["gunicorn", "-w", "3", "-b", "0.0.0.0:8080", "usaShop.wsgi:application"]
+

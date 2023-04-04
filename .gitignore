@@ -18,3 +18,5 @@ build/
 db.sqlite3
 .env
 .products
+.dockerignore
+.Dockerfile
